@@ -1,0 +1,60 @@
+=== Buoi 1 ===
+* SPA
+* Component
+* Rendering Element {}
+
+=== Buoi 2 ===
+* Handling Events
+    - No Params
+    - Params
+
+* State: Nếu như state thay đổi giá trị => Component chạy lại
+
+* List-key
+
+=== Buoi 3 ===
+* Communication
+    * Props: truyền data từ Component cha => Component con
+    * Lifting state up: truyền data từ Component con => Component cha
+
+=== Buoi 4 ===
+Shopping Phone
+
+=== Buoi 5 ===
+Form validation
+
+=== Buoi 6 ===
+react router DOM
+
+=== Buoi 7 ===
+Redux
+    useSelector
+    usedispatch
+    Provider
+
+=== Buoi 8 ===
+Booking ticket
+
+=== Buoi 9 ===
+Hooks
+    - useState
+    - useEffect
+        + chạy 1 lần nếu đối số thứ 2 là mảng rỗng
+        + update: chạy mỗi nếu đối số thứ 2 khác mảng rỗng
+        + destroy: hủy bỏ khi chuyển sang component khác
+    - useMemo: cache giá trị, trả về giá trị
+    - custom Hooks:
+    
+=== Buoi 10 ===
+    Call api ListMovie
+    Async action
+
+=== Buoi 11 ===
+    Call api DetailMove
+    Refactor Api
+
+=== Buoi 12 ===
+    Auth
+    Guard
+    
+
