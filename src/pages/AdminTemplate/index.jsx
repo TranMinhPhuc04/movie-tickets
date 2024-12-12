@@ -1,19 +1,23 @@
+import React from "react";
+import Header from "./_components/Header";
+import Footer from "./_components/Footer";
 import { Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 
-export default function AdminTemplate() {
-  const props = useSelector((state) => state.authReducer);
-
-  if (!props.data) {
-    // redirect to login page
-    return <Navigate to="/auth" />;
-  }
-
+const AdminTemplate = () => {
   return (
-    <div>
-      <h1>Admin Template</h1>
-      <Outlet />
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <Header />
+
+      {/* Nội dung chính */}
+      <main className="flex-1 p-6 bg-gray-100">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
-}
+};
+
+export default AdminTemplate;

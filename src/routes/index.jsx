@@ -1,13 +1,16 @@
 import HomeTemplate from "../pages/HomeTemplate";
 import HomePage from "../pages/HomeTemplate/HomePage";
-import AboutPage from "../pages/HomeTemplate/AboutPage";
+// import AboutPage from "../pages/HomeTemplate/AboutPage";
 import ListMovie from "../pages/HomeTemplate/ListMoviePage";
-import AdminTemplate from "../pages/AdminTemplate";
-import DashboardPage from "../pages/AdminTemplate/DashboardPage";
-import AddUserPage from "../pages/AdminTemplate/AddUserPage";
-import AuthPage from "../pages/AdminTemplate/AuthPage";
 import DetailMoviePage from "../pages/HomeTemplate/DetailMovePage";
+import LoginPage from "../pages/HomeTemplate/AuthPage/LoginPage";
+import RegisterPage from "../pages/HomeTemplate/AuthPage/RegisterPage";
+import SeatPage from "../pages/HomeTemplate/SeatPage";
+import AdminTemplate from "../pages/AdminTemplate";
+import FilmsPage from "../pages/AdminTemplate/FilmsPage";
+import AddFilmPage from "../pages/AdminTemplate/AddFlimPage";
 import { Route } from "react-router-dom";
+import ROUTES from "../constants/routes";
 
 const routes = [
   {
@@ -15,20 +18,28 @@ const routes = [
     element: HomeTemplate,
     children: [
       {
-        path: "",
+        path: ROUTES.HOME,
         element: HomePage,
       },
       {
-        path: "about",
-        element: AboutPage,
-      },
-      {
-        path: "list-movie",
+        path: ROUTES.SEARCH,
         element: ListMovie,
       },
       {
-        path: "detail-movie/:id",
+        path: ROUTES.MOVIE_DETAIL,
         element: DetailMoviePage,
+      },
+      {
+        path: ROUTES.LOGIN,
+        element: LoginPage,
+      },
+      {
+        path: ROUTES.REGISTER,
+        element: RegisterPage,
+      },
+      {
+        path: ROUTES.LIST_SEAT,
+        element: SeatPage,
       },
     ],
   },
@@ -37,18 +48,14 @@ const routes = [
     element: AdminTemplate,
     children: [
       {
-        path: "dashboard",
-        element: DashboardPage,
+        path: ROUTES.ADMIN,
+        element: FilmsPage,
       },
       {
-        path: "add-user",
-        element: AddUserPage,
+        path: ROUTES.ADD_MOVIE,
+        element: AddFilmPage,
       },
     ],
-  },
-  {
-    path: "auth",
-    element: AuthPage,
   },
 ];
 
