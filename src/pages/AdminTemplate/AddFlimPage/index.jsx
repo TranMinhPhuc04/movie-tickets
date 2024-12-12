@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import movieService from "../../../services/movieService";
 import ROUTES from "../../../constants/routes";
 import { message } from "antd";
+import dayjs from "dayjs";
 
 const AddFilmPage = () => {
   const [form, setForm] = useState({
@@ -42,17 +43,15 @@ const AddFilmPage = () => {
     formData.append("trailer", form.trailer);
     formData.append("moTa", form.moTa);
     formData.append("maNhom", "GP01");
-    formData.append("ngayKhoiChieu", form.ngayKhoiChieu);
+    formData.append(
+      "ngayKhoiChieu",
+      dayjs(form.ngayKhoiChieu).format("DD/MM/YYYY")
+    );
     formData.append("sapChieu", form.sapChieu);
     formData.append("dangChieu", form.dangChieu);
     formData.append("hot", form.hot);
     formData.append("danhGia", form.danhGia);
-    formData.append("hinhAnh", form.hinhAnh);
-
-    // Log để kiểm tra formData
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
+    formData.append("File", form.hinhAnh);
 
     try {
       const response = await movieService.addFilm(formData);

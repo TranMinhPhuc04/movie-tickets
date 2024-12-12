@@ -14,6 +14,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
+    // Kiểm tra quyền truy cập
+    if (userData.maLoaiNguoiDung !== "KhachHang") {
+      message.error("Bạn không có quyền truy cập!");
+      throw new Error("Unauthorized access");
+    }
+
+    // Lưu vào localStorage nếu hợp lệ
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
     message.success("Đăng nhập thành công");

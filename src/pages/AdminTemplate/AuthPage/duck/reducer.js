@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../services/apiService";
 
 export const actLogin = createAsyncThunk(
-  "auth/login",
+  "auth/admin/login",
   async (user, { rejectWithValue }) => {
     try {
       const result = await api.post(`QuanLyNguoiDung/DangNhap`, user);

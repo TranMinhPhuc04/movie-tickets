@@ -9,51 +9,61 @@ import SeatPage from "../pages/HomeTemplate/SeatPage";
 import AdminTemplate from "../pages/AdminTemplate";
 import FilmsPage from "../pages/AdminTemplate/FilmsPage";
 import AddFilmPage from "../pages/AdminTemplate/AddFlimPage";
+import AdminLoginPage from "../pages/AdminTemplate/AuthPage/AdminLoginPage";
+import PrivateRoute from "../contexts/PrivateRoute";
 import { Route } from "react-router-dom";
 import ROUTES from "../constants/routes";
 
 const routes = [
   {
     path: "",
-    element: HomeTemplate,
+    element: <HomeTemplate />,
     children: [
       {
         path: ROUTES.HOME,
-        element: HomePage,
+        element: <HomePage />,
       },
       {
         path: ROUTES.SEARCH,
-        element: ListMovie,
+        element: <ListMovie />,
       },
       {
         path: ROUTES.MOVIE_DETAIL,
-        element: DetailMoviePage,
+        element: <DetailMoviePage />,
       },
       {
         path: ROUTES.LOGIN,
-        element: LoginPage,
+        element: <LoginPage />,
       },
       {
         path: ROUTES.REGISTER,
-        element: RegisterPage,
+        element: <RegisterPage />,
       },
       {
         path: ROUTES.LIST_SEAT,
-        element: SeatPage,
+        element: <SeatPage />,
       },
     ],
   },
   {
+    path: ROUTES.ADMIN_LOGIN,
+    element: <AdminLoginPage />,
+  },
+  {
     path: "admin",
-    element: AdminTemplate,
+    element: (
+      <PrivateRoute>
+        <AdminTemplate />
+      </PrivateRoute>
+    ),
     children: [
       {
-        path: ROUTES.ADMIN,
-        element: FilmsPage,
+        path: ROUTES.MOVIE,
+        element: <FilmsPage />,
       },
       {
         path: ROUTES.ADD_MOVIE,
-        element: AddFilmPage,
+        element: <AddFilmPage />,
       },
     ],
   },
@@ -63,19 +73,15 @@ const renderRoutes = () => {
   return routes.map((route) => {
     if (route.children) {
       return (
-        <Route key={route.path} path={route.path} element={<route.element />}>
+        <Route key={route.path} path={route.path} element={route.element}>
           {route.children.map((item) => (
-            <Route
-              key={item.path}
-              path={item.path}
-              element={<item.element />}
-            />
+            <Route key={item.path} path={item.path} element={item.element} />
           ))}
         </Route>
       );
     } else {
       return (
-        <Route key={route.path} path={route.path} element={<route.element />} />
+        <Route key={route.path} path={route.path} element={route.element} />
       );
     }
   });

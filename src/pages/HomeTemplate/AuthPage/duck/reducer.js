@@ -8,29 +8,27 @@ export const actLogin = createAsyncThunk(
       const result = await api.post(`QuanLyNguoiDung/DangNhap`, user);
 
       const userInfo = result.data.content;
-      if (userInfo.maLoaiNguoiDung === "QuanTri") {
-        // cho phép đi tiếp vào AdminTemplate
 
-        // lưu thông tin user xuống localStorage
-        localStorage.setItem("USER_ADMIN", JSON.stringify(userInfo));
+      // Phân loại người dùng dựa trên maLoaiNguoiDung
+      if (userInfo.maLoaiNguoiDung === "KhachHang") {
+        // Lưu thông tin khách hàng vào localStorage
+        localStorage.setItem("USER_CUSTOMER", JSON.stringify(userInfo));
+        return userInfo;
       } else {
-        // thông báo lỗi không cho phép vào AdminTemplate
         return rejectWithValue({
           data: {
-            content: "Bạn không có quyền truy cập AdminTemplate",
+            content: "Bạn không có quyền truy cập trang này!",
           },
         });
       }
-
-      return result.data.content;
     } catch (error) {
       return rejectWithValue(error.response);
     }
   }
 );
 
-const userInfo = localStorage.getItem("USER_ADMIN")
-  ? JSON.parse(localStorage.getItem("USER_ADMIN"))
+const userInfo = localStorage.getItem("USER_CUSTOMER")
+  ? JSON.parse(localStorage.getItem("USER_CUSTOMER"))
   : null;
 
 const initialState = {
@@ -47,6 +45,7 @@ const authReducer = createSlice({
     builder
       .addCase(actLogin.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(actLogin.fulfilled, (state, action) => {
         state.loading = false;

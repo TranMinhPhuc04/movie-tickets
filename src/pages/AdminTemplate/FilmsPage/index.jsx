@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import movieService from "../../../services/movieService";
 import ROUTES from "../../../constants/routes";
+import { message } from "antd";
 
 const FilmsPage = () => {
   const [films, setFilms] = useState([]);
@@ -27,6 +28,19 @@ const FilmsPage = () => {
 
   const handleAddFilm = () => {
     navigate(ROUTES.ADD_MOVIE); // Điều hướng đến AddFilmPage
+  };
+
+  const handleDeleteFilm = async (filmId) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa phim này?")) {
+      try {
+        await movieService.deleteFilm(filmId);
+        message.success("Xóa phim thành công!");
+        fetchFilms(); // Reload danh sách phim sau khi xóa
+      } catch (error) {
+        console.error("Xóa phim thất bại:", error);
+        message.error("Xóa phim thất bại!");
+      }
+    }
   };
 
   const filteredFilms = films.filter((film) =>
@@ -87,7 +101,10 @@ const FilmsPage = () => {
                   <button className="text-blue-500 hover:text-blue-700 transition-colors">
                     ✏️
                   </button>
-                  <button className="text-red-500 hover:text-red-700 transition-colors">
+                  <button
+                    onClick={() => handleDeleteFilm(film.maPhim)}
+                    className="text-red-500 hover:text-red-700 transition-colors"
+                  >
                     🗑️
                   </button>
                 </div>

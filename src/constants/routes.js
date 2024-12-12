@@ -7,7 +7,8 @@ const ROUTES = {
   LIST_SEAT: "/booking/:maLichChieu",
 
   // ADMIN
-  ADMIN: "/admin",
+  ADMIN_LOGIN: "/admin/login",
+  ADMIN_LOGOUT: "/admin/logout",
   MOVIE: "/admin/flims",
   ADD_MOVIE: "/admin/flims/addnew",
 };
