@@ -31,6 +31,14 @@ const movieService = {
   deleteFilm: (filmId) => {
     return api.delete(`/QuanLyPhim/XoaPhim?MaPhim=${filmId}`);
   },
+
+  updateFilm: (formData) => {
+    return api.post(`/QuanLyPhim/CapNhatPhimUpload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };
 
 export default movieService;

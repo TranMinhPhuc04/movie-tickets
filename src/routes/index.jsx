@@ -9,6 +9,7 @@ import SeatPage from "../pages/HomeTemplate/SeatPage";
 import AdminTemplate from "../pages/AdminTemplate";
 import FilmsPage from "../pages/AdminTemplate/FilmsPage";
 import AddFilmPage from "../pages/AdminTemplate/AddFlimPage";
+import EditFilmPage from "../pages/AdminTemplate/EditFlimPage";
 import AdminLoginPage from "../pages/AdminTemplate/AuthPage/AdminLoginPage";
 import PrivateRoute from "../contexts/PrivateRoute";
 import { Route } from "react-router-dom";
@@ -64,6 +65,10 @@ const routes = [
       {
         path: ROUTES.ADD_MOVIE,
         element: <AddFilmPage />,
+      },
+      {
+        path: `${ROUTES.EDIT_MOVIE}/:id`, // "/admin/flims/edit/:id"
+        element: <EditFilmPage />,
       },
     ],
   },

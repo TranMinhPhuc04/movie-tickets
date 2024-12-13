@@ -8,8 +8,9 @@ const ROUTES = {
 
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
-  ADMIN_LOGOUT: "/admin/logout",
-  MOVIE: "/admin/flims",
-  ADD_MOVIE: "/admin/flims/addnew",
+  MOVIE: "/admin/flims", // Trang danh sách phim
+  ADD_MOVIE: "/admin/flims/addnew", // Trang thêm phim
+  EDIT_MOVIE: "/admin/flims/edit", // Trang sửa phim
 };
+
 export default ROUTES;

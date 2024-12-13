@@ -13,13 +13,14 @@ const FilmsPage = () => {
     fetchFilms();
   }, []);
 
-  const fetchFilms = () => {
-    movieService
-      .getFilmList()
-      .then((res) => {
-        setFilms(res.data.content);
-      })
-      .catch((err) => console.error(err));
+  const fetchFilms = async () => {
+    try {
+      const res = await movieService.getFilmList();
+      setFilms(res.data.content);
+    } catch (err) {
+      console.error("Lỗi khi tải danh sách phim:", err);
+      message.error("Không thể tải danh sách phim!");
+    }
   };
 
   const handleSearch = (e) => {
@@ -27,7 +28,7 @@ const FilmsPage = () => {
   };
 
   const handleAddFilm = () => {
-    navigate(ROUTES.ADD_MOVIE); // Điều hướng đến AddFilmPage
+    navigate(ROUTES.ADD_MOVIE); // Điều hướng đến trang thêm phim
   };
 
   const handleDeleteFilm = async (filmId) => {
@@ -35,12 +36,16 @@ const FilmsPage = () => {
       try {
         await movieService.deleteFilm(filmId);
         message.success("Xóa phim thành công!");
-        fetchFilms(); // Reload danh sách phim sau khi xóa
+        fetchFilms(); // Cập nhật lại danh sách phim sau khi xóa
       } catch (error) {
         console.error("Xóa phim thất bại:", error);
-        message.error("Xóa phim thất bại!");
+        message.error("Không thể xóa phim!");
       }
     }
+  };
+
+  const handleEditFilm = (filmId) => {
+    navigate(`${ROUTES.EDIT_MOVIE}/${filmId}`);
   };
 
   const filteredFilms = films.filter((film) =>
@@ -98,7 +103,10 @@ const FilmsPage = () => {
               </td>
               <td className="px-4 py-2 border border-gray-300">
                 <div className="flex items-center space-x-4">
-                  <button className="text-blue-500 hover:text-blue-700 transition-colors">
+                  <button
+                    onClick={() => handleEditFilm(film.maPhim)}
+                    className="text-blue-500 hover:text-blue-700 transition-colors"
+                  >
                     ✏️
                   </button>
                   <button
