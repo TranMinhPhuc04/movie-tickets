@@ -6,11 +6,11 @@ import theaterService from "../../../services/theaterService";
 import dayjs from "dayjs";
 
 const ShowtimePage = () => {
-  const { idFilm } = useParams(); // Lấy id phim từ URL
+  const { idFilm } = useParams();
   const [movie, setMovie] = useState({});
-  const [theaterSystems, setTheaterSystems] = useState([]); // Danh sách hệ thống rạp
-  const [theaters, setTheaters] = useState([]); // Danh sách cụm rạp
-  const [selectedTheaterSystem, setSelectedTheaterSystem] = useState(""); // Hệ thống rạp đã chọn
+  const [theaterSystems, setTheaterSystems] = useState([]);
+  const [theaters, setTheaters] = useState([]);
+  const [selectedTheaterSystem, setSelectedTheaterSystem] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -28,16 +28,9 @@ const ShowtimePage = () => {
   }, [idFilm]);
 
   const fetchMovieDetails = async (idFilm) => {
-    if (!idFilm) {
-      message.error("Không tìm thấy mã phim. Vui lòng kiểm tra lại!");
-      return;
-    }
     try {
       const res = await movieService.getMovieById(idFilm);
-      if (!res.data.content) {
-        throw new Error("Dữ liệu phim trống");
-      }
-      setMovie(res.data.content);
+      setMovie(res.data.content || {});
     } catch (err) {
       console.error("Lỗi khi tải thông tin phim:", err);
       message.error("Không thể tải thông tin phim!");
@@ -55,15 +48,21 @@ const ShowtimePage = () => {
   };
 
   const fetchTheaters = async (maHeThongRap) => {
-    setIsLoading(true); // Bắt đầu tải dữ liệu
+    setIsLoading(true);
     try {
       const res = await theaterService.getTheatersBySystem(maHeThongRap);
-      setTheaters(res.data.content);
+      const validTheaters = (res.data.content || []).map((theater) => ({
+        ...theater,
+        maRap: theater.maRap || `unknown_${Math.random()}`, // Thêm giá trị mặc định nếu thiếu
+        tenCumRap: theater.tenCumRap || "Cụm rạp không xác định",
+      }));
+      console.log("Danh sách cụm rạp hợp lệ:", validTheaters); // Log danh sách cụm rạp hợp lệ
+      setTheaters(validTheaters);
     } catch (err) {
       console.error("Lỗi khi tải cụm rạp:", err);
       message.error("Không thể tải danh sách cụm rạp!");
     } finally {
-      setIsLoading(false); // Kết thúc tải dữ liệu
+      setIsLoading(false);
     }
   };
 
@@ -80,24 +79,36 @@ const ShowtimePage = () => {
   const handleDateChange = (date) => {
     setForm({
       ...form,
-      ngayChieuGioChieu: dayjs(date).format("DD/MM/YYYY HH:mm:ss"),
+      ngayChieuGioChieu: dayjs(date).format("DD/MM/YYYY HH:mm:ss"), // Định dạng dd/MM/yyyy hh:mm:ss
     });
   };
 
   const handleSubmit = async () => {
-    if (!form.maRap || !form.ngayChieuGioChieu || !form.giaVe) {
+    const { maRap, ngayChieuGioChieu, giaVe } = form;
+
+    if (!maRap || !ngayChieuGioChieu || !giaVe) {
       message.error("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
-    const payload = { maPhim: idFilm, ...form };
+    const payload = {
+      maPhim: Number(idFilm),
+      maRap,
+      ngayChieuGioChieu, // Đã định dạng đúng trong handleDateChange
+      giaVe: Number(giaVe),
+    };
+
+    console.log("Payload gửi lên:", payload);
 
     try {
       await movieService.createShowtime(payload);
       message.success("Tạo lịch chiếu thành công!");
     } catch (err) {
-      console.error("Tạo lịch chiếu thất bại:", err);
-      message.error("Không thể tạo lịch chiếu. Vui lòng kiểm tra lại!");
+      console.error("Tạo lịch chiếu thất bại:", err.response || err);
+      const errorMsg =
+        err.response?.data?.message ||
+        "Không thể tạo lịch chiếu. Vui lòng kiểm tra lại!";
+      message.error(errorMsg);
     }
   };
 
@@ -117,22 +128,14 @@ const ShowtimePage = () => {
           onChange={handleTheaterSystemChange}
           className="w-full"
         >
-          {theaterSystems && theaterSystems.length > 0 ? (
-            theaterSystems
-              .filter((system) => system.maHeThongRap && system.tenHeThongRap) // Lọc phần tử hợp lệ
-              .map((system) => (
-                <Select.Option
-                  key={`heThong_${system.maHeThongRap}`} // Đảm bảo key duy nhất với tiền tố
-                  value={system.maHeThongRap}
-                >
-                  {system.tenHeThongRap}
-                </Select.Option>
-              ))
-          ) : (
-            <Select.Option key="loading" value="loading" disabled>
-              Đang tải dữ liệu hệ thống rạp...
+          {theaterSystems.map((system) => (
+            <Select.Option
+              key={`heThong_${system.maHeThongRap}`} // Đảm bảo key duy nhất
+              value={system.maHeThongRap}
+            >
+              {system.tenHeThongRap || "Tên hệ thống không xác định"}
             </Select.Option>
-          )}
+          ))}
         </Select>
 
         <Select
@@ -140,22 +143,14 @@ const ShowtimePage = () => {
           onChange={(value) => setForm({ ...form, maRap: value })}
           className="w-full"
         >
-          {theaters && theaters.length > 0 ? (
-            theaters
-              // .filter((theater) => theater.maRap && theater.tenCumRap) // Lọc phần tử hợp lệ
-              .map((theater) => (
-                <Select.Option
-                  key={`cumRap_${theater.maRap}`} // Đảm bảo key duy nhất với tiền tố
-                  value={theater.maRap}
-                >
-                  {theater.tenCumRap}
-                </Select.Option>
-              ))
-          ) : (
-            <Select.Option key="loading" value="loading" disabled>
-              Đang tải dữ liệu...
+          {theaters.map((theater) => (
+            <Select.Option
+              key={`cumRap_${theater.maRap}`} // Đảm bảo key duy nhất
+              value={theater.maRap}
+            >
+              {theater.tenCumRap}
             </Select.Option>
-          )}
+          ))}
         </Select>
 
         <DatePicker

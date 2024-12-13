@@ -7,6 +7,7 @@ const API = {
   GET_FILM_LIST: "/QuanLyPhim/LayDanhSachPhim",
   ADD_FILM: "/QuanLyPhim/ThemPhimUploadHinh",
   DELETE_FILM: "/QuanLyPhim/XoaPhim",
+  CREATE_SHOWTIME: "/QuanLyDatVe/TaoLichChieu",
 };
 
 export default API;

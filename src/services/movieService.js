@@ -41,7 +41,7 @@ const movieService = {
   },
 
   createShowtime: (data) => {
-    return api.post(`QuanLyDatVe/TaoLichChieu`, data);
+    return api.post(`${API.CREATE_SHOWTIME}`, data);
   },
 };
 
