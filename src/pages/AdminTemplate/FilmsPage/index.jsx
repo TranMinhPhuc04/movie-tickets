@@ -31,8 +31,8 @@ const FilmsPage = () => {
     navigate(ROUTES.ADD_MOVIE); // Điều hướng đến AddFilmPage
   };
 
-  const handleShowtime = () => {
-    navigate(ROUTES.SHOWTIME); // Điều hướng kèm `filmId`
+  const handleShowtime = (filmId) => {
+    navigate(`${ROUTES.SHOWTIME.replace(":idFilm", filmId)}`);
   };
 
   const handleDeleteFilm = async (filmId) => {
@@ -118,7 +118,7 @@ const FilmsPage = () => {
                     🗑️
                   </button>
                   <button
-                    onClick={() => handleShowtime(film.maPhim)} // Nút tạo lịch chiếu
+                    onClick={() => handleShowtime(film.maPhim)}
                     className="text-green-500 hover:text-green-700 transition-colors"
                   >
                     🕒

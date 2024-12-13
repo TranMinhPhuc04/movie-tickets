@@ -6,13 +6,13 @@ import theaterService from "../../../services/theaterService";
 import dayjs from "dayjs";
 
 const ShowtimePage = () => {
-  const { idFilm } = useParams();
-  console.log("idFilm từ useParams:", idFilm);
+  const { idFilm } = useParams(); // Lấy id phim từ URL
   const [movie, setMovie] = useState({});
-  const [theaterSystems, setTheaterSystems] = useState([]);
-  const [theaters, setTheaters] = useState([]);
-  const [selectedTheaterSystem, setSelectedTheaterSystem] = useState("");
+  const [theaterSystems, setTheaterSystems] = useState([]); // Danh sách hệ thống rạp
+  const [theaters, setTheaters] = useState([]); // Danh sách cụm rạp
+  const [selectedTheaterSystem, setSelectedTheaterSystem] = useState(""); // Hệ thống rạp đã chọn
   const [form, setForm] = useState({
+    maPhim: null,
     maRap: "",
     ngayChieuGioChieu: "",
     giaVe: "",
@@ -26,8 +26,15 @@ const ShowtimePage = () => {
   }, [idFilm]);
 
   const fetchMovieDetails = async (idFilm) => {
+    if (!idFilm) {
+      message.error("Không tìm thấy mã phim. Vui lòng kiểm tra lại!");
+      return;
+    }
     try {
       const res = await movieService.getMovieById(idFilm);
+      if (!res.data.content) {
+        throw new Error("Dữ liệu phim trống");
+      }
       setMovie(res.data.content);
     } catch (err) {
       console.error("Lỗi khi tải thông tin phim:", err);
@@ -38,7 +45,7 @@ const ShowtimePage = () => {
   const fetchTheaterSystems = async () => {
     try {
       const res = await theaterService.getTheaterSystems();
-      setTheaterSystems(res.data.content);
+      setTheaterSystems(res.data.content || []);
     } catch (err) {
       console.error("Lỗi khi tải hệ thống rạp:", err);
       message.error("Không thể tải danh sách hệ thống rạp!");
@@ -48,7 +55,7 @@ const ShowtimePage = () => {
   const fetchTheaters = async (maHeThongRap) => {
     try {
       const res = await theaterService.getTheatersBySystem(maHeThongRap);
-      setTheaters(res.data.content);
+      setTheaters(res.data.content || []);
     } catch (err) {
       console.error("Lỗi khi tải cụm rạp:", err);
       message.error("Không thể tải danh sách cụm rạp!");
@@ -105,26 +112,31 @@ const ShowtimePage = () => {
           onChange={handleTheaterSystemChange}
           className="w-full"
         >
-          {theaterSystems.map((system) => (
-            <Select.Option
-              key={system.maHeThongRap}
-              value={system.maHeThongRap}
-            >
-              {system.tenHeThongRap}
-            </Select.Option>
-          ))}
+          {theaterSystems
+            .filter((system) => system.maHeThongRap) // Lọc giá trị null
+            .map((system) => (
+              <Select.Option
+                key={system.maHeThongRap}
+                value={system.maHeThongRap}
+              >
+                {system.tenHeThongRap}
+              </Select.Option>
+            ))}
         </Select>
         <Select
           placeholder="Chọn cụm rạp"
           onChange={(value) => setForm({ ...form, maRap: value })}
           className="w-full"
         >
-          {theaters.map((theater) => (
-            <Select.Option key={theater.maRap} value={theater.maRap}>
-              {theater.tenCumRap}
-            </Select.Option>
-          ))}
+          {theaters
+            // .filter((theater) => theater.maRap) // Lọc giá trị null
+            .map((theater) => (
+              <Select.Option key={theater.maRap} value={theater.maRap}>
+                {theater.tenCumRap || "Tên cụm rạp không xác định"}
+              </Select.Option>
+            ))}
         </Select>
+
         <DatePicker
           showTime
           placeholder="Chọn ngày chiếu"
