@@ -11,6 +11,8 @@ const ShowtimePage = () => {
   const [theaterSystems, setTheaterSystems] = useState([]); // Danh sách hệ thống rạp
   const [theaters, setTheaters] = useState([]); // Danh sách cụm rạp
   const [selectedTheaterSystem, setSelectedTheaterSystem] = useState(""); // Hệ thống rạp đã chọn
+  const [isLoading, setIsLoading] = useState(false);
+
   const [form, setForm] = useState({
     maPhim: null,
     maRap: "",
@@ -53,12 +55,15 @@ const ShowtimePage = () => {
   };
 
   const fetchTheaters = async (maHeThongRap) => {
+    setIsLoading(true); // Bắt đầu tải dữ liệu
     try {
       const res = await theaterService.getTheatersBySystem(maHeThongRap);
-      setTheaters(res.data.content || []);
+      setTheaters(res.data.content);
     } catch (err) {
       console.error("Lỗi khi tải cụm rạp:", err);
       message.error("Không thể tải danh sách cụm rạp!");
+    } finally {
+      setIsLoading(false); // Kết thúc tải dữ liệu
     }
   };
 
@@ -112,29 +117,45 @@ const ShowtimePage = () => {
           onChange={handleTheaterSystemChange}
           className="w-full"
         >
-          {theaterSystems
-            .filter((system) => system.maHeThongRap) // Lọc giá trị null
-            .map((system) => (
-              <Select.Option
-                key={system.maHeThongRap}
-                value={system.maHeThongRap}
-              >
-                {system.tenHeThongRap}
-              </Select.Option>
-            ))}
+          {theaterSystems && theaterSystems.length > 0 ? (
+            theaterSystems
+              .filter((system) => system.maHeThongRap && system.tenHeThongRap) // Lọc phần tử hợp lệ
+              .map((system) => (
+                <Select.Option
+                  key={`heThong_${system.maHeThongRap}`} // Đảm bảo key duy nhất với tiền tố
+                  value={system.maHeThongRap}
+                >
+                  {system.tenHeThongRap}
+                </Select.Option>
+              ))
+          ) : (
+            <Select.Option key="loading" value="loading" disabled>
+              Đang tải dữ liệu hệ thống rạp...
+            </Select.Option>
+          )}
         </Select>
+
         <Select
           placeholder="Chọn cụm rạp"
           onChange={(value) => setForm({ ...form, maRap: value })}
           className="w-full"
         >
-          {theaters
-            // .filter((theater) => theater.maRap) // Lọc giá trị null
-            .map((theater) => (
-              <Select.Option key={theater.maRap} value={theater.maRap}>
-                {theater.tenCumRap || "Tên cụm rạp không xác định"}
-              </Select.Option>
-            ))}
+          {theaters && theaters.length > 0 ? (
+            theaters
+              // .filter((theater) => theater.maRap && theater.tenCumRap) // Lọc phần tử hợp lệ
+              .map((theater) => (
+                <Select.Option
+                  key={`cumRap_${theater.maRap}`} // Đảm bảo key duy nhất với tiền tố
+                  value={theater.maRap}
+                >
+                  {theater.tenCumRap}
+                </Select.Option>
+              ))
+          ) : (
+            <Select.Option key="loading" value="loading" disabled>
+              Đang tải dữ liệu...
+            </Select.Option>
+          )}
         </Select>
 
         <DatePicker
