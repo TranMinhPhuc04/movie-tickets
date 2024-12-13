@@ -1,56 +1,32 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import userService from "../../../services/userService";
+import { actLogin } from "../../AdminTemplate/AuthPage/duck/reducer";
 import ROUTES from "../../../constants/routes";
 import { message } from "antd";
 
 const AdminLoginPage = () => {
-  const [adminCredentials, setAdminCredentials] = useState({
-    taiKhoan: "",
-    matKhau: "",
-  });
-
+  const [credentials, setCredentials] = useState({ taiKhoan: "", matKhau: "" });
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.authAdminReducer);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAdminCredentials({
-      ...adminCredentials,
-      [name]: value,
-    });
+    setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const response = await userService.login(adminCredentials);
-      const userInfo = response.data.content;
-
-      // Kiểm tra quyền truy cập
-      if (userInfo.maLoaiNguoiDung !== "QuanTri") {
-        message.error("Bạn không có quyền truy cập Admin!");
-        return;
-      }
-
-      // Lưu thông tin admin vào localStorage
-      localStorage.setItem("USER_ADMIN", JSON.stringify(userInfo));
-      console.log(
-        "Lưu thành công:",
-        JSON.parse(localStorage.getItem("USER_ADMIN"))
-      );
-      message.success("Đăng nhập thành công!");
-
-      // Điều hướng đến trang admin dashboard
-      setTimeout(() => {
+    dispatch(actLogin(credentials))
+      .unwrap()
+      .then(() => {
+        message.success("Đăng nhập thành công!");
         navigate(ROUTES.MOVIE);
-      }, 500);
-    } catch (error) {
-      console.error(error);
-      message.error(
-        "Đăng nhập thất bại. Vui lòng kiểm tra tài khoản/mật khẩu."
-      );
-    }
+      })
+      .catch((err) => {
+        message.error(err || "Đăng nhập thất bại!");
+      });
   };
 
   return (
@@ -60,12 +36,13 @@ const AdminLoginPage = () => {
         className="bg-white p-6 rounded shadow-md w-96"
       >
         <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
+        {error && <p className="text-red-500">{error}</p>}
         <div className="mb-4">
           <label className="block text-gray-700 mb-1">Tài khoản</label>
           <input
             type="text"
             name="taiKhoan"
-            value={adminCredentials.taiKhoan}
+            value={credentials.taiKhoan}
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded"
@@ -76,7 +53,7 @@ const AdminLoginPage = () => {
           <input
             type="password"
             name="matKhau"
-            value={adminCredentials.matKhau}
+            value={credentials.matKhau}
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded"
@@ -84,9 +61,10 @@ const AdminLoginPage = () => {
         </div>
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         >
-          Đăng nhập
+          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
       </form>
     </div>
