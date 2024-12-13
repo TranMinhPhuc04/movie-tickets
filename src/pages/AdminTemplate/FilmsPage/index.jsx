@@ -28,7 +28,11 @@ const FilmsPage = () => {
   };
 
   const handleAddFilm = () => {
-    navigate(ROUTES.ADD_MOVIE); // Điều hướng đến trang thêm phim
+    navigate(ROUTES.ADD_MOVIE); // Điều hướng đến AddFilmPage
+  };
+
+  const handleShowtime = () => {
+    navigate(ROUTES.SHOWTIME); // Điều hướng kèm `filmId`
   };
 
   const handleDeleteFilm = async (filmId) => {
@@ -42,10 +46,6 @@ const FilmsPage = () => {
         message.error("Không thể xóa phim!");
       }
     }
-  };
-
-  const handleEditFilm = (filmId) => {
-    navigate(`${ROUTES.EDIT_MOVIE}/${filmId}`);
   };
 
   const filteredFilms = films.filter((film) =>
@@ -104,7 +104,9 @@ const FilmsPage = () => {
               <td className="px-4 py-2 border border-gray-300">
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => handleEditFilm(film.maPhim)}
+                    onClick={() =>
+                      navigate(`${ROUTES.ADD_MOVIE}/${film.maPhim}`)
+                    }
                     className="text-blue-500 hover:text-blue-700 transition-colors"
                   >
                     ✏️
@@ -114,6 +116,12 @@ const FilmsPage = () => {
                     className="text-red-500 hover:text-red-700 transition-colors"
                   >
                     🗑️
+                  </button>
+                  <button
+                    onClick={() => handleShowtime(film.maPhim)} // Nút tạo lịch chiếu
+                    className="text-green-500 hover:text-green-700 transition-colors"
+                  >
+                    🕒
                   </button>
                 </div>
               </td>

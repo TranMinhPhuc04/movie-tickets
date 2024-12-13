@@ -2,8 +2,8 @@ import api from "./apiService";
 import API from "../constants/api";
 
 const movieService = {
-  getMovieById: (id) => {
-    return api.get(`${API.GET_MOVIE_BY_ID}?MaPhim=${id}`);
+  getMovieById: (idFilm) => {
+    return api.get(`${API.GET_MOVIE_BY_ID}?MaPhim=${idFilm}`);
   },
 
   getDetailMovie: (id) => {
@@ -38,6 +38,10 @@ const movieService = {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+
+  createShowtime: (data) => {
+    return api.post(`QuanLyDatVe/TaoLichChieu`, data);
   },
 };
 
