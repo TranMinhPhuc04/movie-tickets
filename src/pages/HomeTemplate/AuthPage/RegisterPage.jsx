@@ -1,107 +1,114 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Input, Button, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import userService from "../../../services/userService";
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
-    username: "",
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    taiKhoan: "",
+    matKhau: "",
+    nhapLaiMatKhau: "",
+    hoTen: "",
     email: "",
-    password: "",
-    confirmPassword: "",
+    soDt: "",
+    maNhom: "GP01", // Mặc định nhóm là GP01
   });
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Mật khẩu không khớp!");
+  const handleSubmit = async () => {
+    if (form.matKhau !== form.nhapLaiMatKhau) {
+      message.error("Mật khẩu nhập lại không khớp!");
       return;
     }
-    console.log("Registering with:", formData);
-    // Xử lý đăng ký ở đây
+
+    const { nhapLaiMatKhau, ...payload } = form; // Loại bỏ nhapLaiMatKhau trước khi gửi lên server
+
+    try {
+      await userService.register(payload);
+      message.success("Đăng ký thành công!");
+      navigate("/dangnhap"); // Điều hướng sang trang đăng nhập
+    } catch (err) {
+      console.error("Đăng ký thất bại:", err.response || err);
+      const errorMsg =
+        err.response?.data?.content || "Đăng ký thất bại. Vui lòng thử lại!";
+      message.error(errorMsg);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Đăng ký
-        </h2>
-        <form onSubmit={handleSubmit}>
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="p-8 bg-white shadow-md rounded w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Đăng Ký</h2>
+        <form>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700">
-              Tài khoản
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Nhập tài khoản"
+            <Input
+              placeholder="Tài khoản"
+              name="taiKhoan"
+              value={form.taiKhoan}
+              onChange={handleInputChange}
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
+            <Input.Password
+              placeholder="Mật khẩu"
+              name="matKhau"
+              value={form.matKhau}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <Input.Password
+              placeholder="Nhập lại mật khẩu"
+              name="nhapLaiMatKhau"
+              value={form.nhapLaiMatKhau}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <Input
+              placeholder="Họ tên"
+              name="hoTen"
+              value={form.hoTen}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <Input
+              placeholder="Email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Nhập email"
+              value={form.email}
+              onChange={handleInputChange}
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700">
-              Mật khẩu
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Nhập mật khẩu"
+            <Input
+              placeholder="Số điện thoại"
+              name="soDt"
+              value={form.soDt}
+              onChange={handleInputChange}
               required
             />
           </div>
-          <div className="mb-6">
-            <label htmlFor="confirmPassword" className="block text-gray-700">
-              Xác nhận mật khẩu
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Xác nhận mật khẩu"
-              required
-            />
+          <div className="flex justify-between items-center">
+            <Button type="primary" onClick={handleSubmit}>
+              Đăng ký
+            </Button>
+            <Link to="/login">
+              <Button>Đăng nhập ➡</Button>
+            </Link>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-          >
-            Đăng ký
-          </button>
         </form>
-        <div className="mt-4 text-center">
-          <a href="/login" className="text-blue-600 hover:underline text-sm">
-            Đã có tài khoản? Đăng nhập
-          </a>
-        </div>
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ const API = {
   ADD_FILM: "/QuanLyPhim/ThemPhimUploadHinh",
   DELETE_FILM: "/QuanLyPhim/XoaPhim",
   CREATE_SHOWTIME: "/QuanLyDatVe/TaoLichChieu",
+  GET_USER_INFO: "/QuanLyNguoiDung/ThongTinTaiKhoan",
+  UPDATE_USER_INFO: "/QuanLyNguoiDung/CapNhatThongTinTaiKhoan",
 };
 
 export default API;

@@ -6,12 +6,14 @@ import DetailMoviePage from "../pages/HomeTemplate/DetailMovePage";
 import LoginPage from "../pages/HomeTemplate/AuthPage/LoginPage";
 import RegisterPage from "../pages/HomeTemplate/AuthPage/RegisterPage";
 import SeatPage from "../pages/HomeTemplate/SeatPage";
+import ProfilePage from "../pages/HomeTemplate/AuthPage/ProfilePage";
 import AdminTemplate from "../pages/AdminTemplate";
 import FilmsPage from "../pages/AdminTemplate/FilmsPage";
 import AddFilmPage from "../pages/AdminTemplate/AddFlimPage";
 import EditFilmPage from "../pages/AdminTemplate/EditFlimPage";
 import ShowtimePage from "../pages/AdminTemplate/ShowtimePage";
 import AdminLoginPage from "../pages/AdminTemplate/AuthPage/AdminLoginPage";
+import UserManagement from "../pages/AdminTemplate/AuthPage/UserManagement";
 import PrivateRoute from "../contexts/PrivateRoute";
 import { Route } from "react-router-dom";
 import ROUTES from "../constants/routes";
@@ -45,6 +47,10 @@ const routes = [
         path: ROUTES.LIST_SEAT,
         element: <SeatPage />,
       },
+      {
+        path: ROUTES.GET_USE_INFO,
+        element: <ProfilePage />,
+      },
     ],
   },
   {
@@ -74,6 +80,10 @@ const routes = [
       {
         path: ROUTES.SHOWTIME,
         element: <ShowtimePage />,
+      },
+      {
+        path: ROUTES.MANAGE_USER,
+        element: <UserManagement />,
       },
     ],
   },

@@ -48,6 +48,10 @@ const FilmsPage = () => {
     }
   };
 
+  const handleManageUsers = () => {
+    navigate(ROUTES.MANAGE_USER); // Điều hướng đến trang quản lý người dùng
+  };
+
   const filteredFilms = films.filter((film) =>
     film.tenPhim.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -56,12 +60,20 @@ const FilmsPage = () => {
     <div className="p-6 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Quản lý Phim</h2>
-        <button
-          onClick={handleAddFilm}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Thêm phim
-        </button>
+        <div className="flex space-x-4">
+          <button
+            onClick={handleAddFilm}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Thêm phim
+          </button>
+          <button
+            onClick={handleManageUsers}
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+          >
+            Quản lý người dùng
+          </button>
+        </div>
       </div>
       <div className="mb-4">
         <input

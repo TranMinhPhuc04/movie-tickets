@@ -1,37 +1,45 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../contexts/AuthContext"; // Import AuthContext
+import { Dropdown, Menu } from "antd";
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 const Header = () => {
-  const { user, logout } = useContext(AuthContext); // Lấy user và hàm logout từ AuthContext
+  const { user, logout } = useContext(AuthContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("accessToken");
+    navigate("/");
+  };
+
+  const handleNavigateToProfile = () => {
+    navigate("/profile");
+  };
+
+  // Menu items cho Dropdown
+  const userMenuItems = [
+    {
+      label: "Quản lý thông tin cá nhân",
+      key: "profile",
+      onClick: handleNavigateToProfile,
+    },
+    {
+      label: "Đăng xuất",
+      key: "logout",
+      onClick: handleLogout,
+    },
+  ];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleNavigateToLogin = () => {
-    navigate("/login");
-  };
-
-  const handleNavigateToRegister = () => {
-    navigate("/register");
-  };
-
-  const handleLogout = () => {
-    logout(); // Gọi hàm logout từ AuthContext
-    navigate("/"); // Chuyển hướng về trang chủ sau khi đăng xuất
-  };
-
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        {/* Logo */}
         <div className="flex items-center">
           <img
             src="./images/logo.jpg"
@@ -40,55 +48,71 @@ const Header = () => {
           />
           <span className="text-xl font-bold text-blue-800">MOVIE TICKET</span>
         </div>
+
+        {/* Menu chính */}
         <nav className="hidden md:flex space-x-8 text-lg font-semibold">
-          <button className="text-gray-800 hover:text-blue-800 transition duration-300">
+          <button
+            onClick={() => navigate("/movies")}
+            className="text-gray-800 hover:text-blue-800 transition"
+          >
             Đang Chiếu
           </button>
-          <button className="text-gray-800 hover:text-blue-800 transition duration-300">
+          <button
+            onClick={() => navigate("/showtimes")}
+            className="text-gray-800 hover:text-blue-800 transition"
+          >
             Lịch Chiếu
           </button>
-          <button className="text-gray-800 hover:text-blue-800 transition duration-300">
+          <button
+            onClick={() => navigate("/news")}
+            className="text-gray-800 hover:text-blue-800 transition"
+          >
             Tin Tức
           </button>
-          <button className="text-gray-800 hover:text-blue-800 transition duration-300">
+          <button
+            onClick={() => navigate("/app")}
+            className="text-gray-800 hover:text-blue-800 transition"
+          >
             App
           </button>
         </nav>
+
+        {/* Menu user */}
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
-            <>
-              <span className="text-gray-800">
-                Xin chào, <strong>{user.hoTen || user.email}</strong>
-              </span>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 border rounded text-red-800 border-red-800 hover:bg-red-800 hover:text-white transition duration-300"
-              >
-                Đăng xuất
+            <Dropdown
+              menu={{ items: userMenuItems }}
+              trigger={["click"]}
+              placement="bottomRight"
+            >
+              <button className="text-gray-800">
+                Xin chào,{" "}
+                <strong>{user?.hoTen || user?.email || "Người dùng"}</strong>
               </button>
-            </>
+            </Dropdown>
           ) : (
             <>
               <button
-                onClick={handleNavigateToLogin}
-                className="px-4 py-2 border rounded text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white transition duration-300"
+                onClick={() => navigate("/login")}
+                className="px-4 py-2 border rounded text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white transition"
               >
                 Đăng nhập
               </button>
               <button
-                onClick={handleNavigateToRegister}
-                className="px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-900 transition duration-300"
+                onClick={() => navigate("/register")}
+                className="px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-900 transition"
               >
                 Đăng ký
               </button>
             </>
           )}
         </div>
+
+        {/* Menu di động */}
         <button
           className="md:hidden text-blue-800"
           onClick={toggleMobileMenu}
           aria-label="Toggle Mobile Menu"
-          aria-expanded={isMobileMenuOpen}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -106,50 +130,62 @@ const Header = () => {
           </svg>
         </button>
       </div>
+
+      {/* Menu di động mở rộng */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <nav className="flex flex-col space-y-2 p-4 text-lg font-semibold">
             <button
               onClick={() => {
-                navigate("/showtimes");
-                closeMobileMenu();
+                navigate("/movies");
+                setIsMobileMenuOpen(false);
               }}
+              className="text-gray-800 hover:text-blue-800"
             >
               Đang Chiếu
             </button>
             <button
               onClick={() => {
-                navigate("/cinemas");
-                closeMobileMenu();
+                navigate("/showtimes");
+                setIsMobileMenuOpen(false);
               }}
+              className="text-gray-800 hover:text-blue-800"
             >
               Lịch Chiếu
             </button>
             <button
               onClick={() => {
                 navigate("/news");
-                closeMobileMenu();
+                setIsMobileMenuOpen(false);
               }}
+              className="text-gray-800 hover:text-blue-800"
             >
               Tin Tức
             </button>
             <button
               onClick={() => {
                 navigate("/app");
-                closeMobileMenu();
+                setIsMobileMenuOpen(false);
               }}
+              className="text-gray-800 hover:text-blue-800"
             >
               App
             </button>
             <div className="flex flex-col space-y-2 mt-4">
               {user ? (
                 <>
-                  <span className="text-center text-gray-800">
-                    Xin chào, <strong>{user.hoTen || user.email}</strong>
-                  </span>
+                  <button
+                    onClick={() => {
+                      handleNavigateToProfile();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="text-gray-800"
+                  >
+                    Thông tin cá nhân
+                  </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full px-4 py-2 border rounded text-red-800 border-red-800 hover:bg-red-800 hover:text-white transition duration-300"
+                    className="text-red-800 hover:text-red-600"
                   >
                     Đăng xuất
                   </button>
@@ -158,19 +194,19 @@ const Header = () => {
                 <>
                   <button
                     onClick={() => {
-                      handleNavigateToLogin();
-                      closeMobileMenu();
+                      navigate("/login");
+                      setIsMobileMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 border rounded text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white transition duration-300"
+                    className="text-blue-800 hover:text-blue-600"
                   >
                     Đăng nhập
                   </button>
                   <button
                     onClick={() => {
-                      handleNavigateToRegister();
-                      closeMobileMenu();
+                      navigate("/register");
+                      setIsMobileMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-900 transition duration-300"
+                    className="text-blue-800 hover:text-blue-600"
                   >
                     Đăng ký
                   </button>

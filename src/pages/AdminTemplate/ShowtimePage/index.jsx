@@ -15,7 +15,7 @@ const ShowtimePage = () => {
 
   const [form, setForm] = useState({
     maPhim: null,
-    maRap: "",
+    maCumRap: "",
     ngayChieuGioChieu: "",
     giaVe: "",
   });
@@ -53,7 +53,7 @@ const ShowtimePage = () => {
       const res = await theaterService.getTheatersBySystem(maHeThongRap);
       const validTheaters = (res.data.content || []).map((theater) => ({
         ...theater,
-        maRap: theater.maRap || `unknown_${Math.random()}`, // Thêm giá trị mặc định nếu thiếu
+        maCumRap: theater.maCumRap || `unknown_${Math.random()}`, // Thêm giá trị mặc định nếu thiếu
         tenCumRap: theater.tenCumRap || "Cụm rạp không xác định",
       }));
       console.log("Danh sách cụm rạp hợp lệ:", validTheaters); // Log danh sách cụm rạp hợp lệ
@@ -79,22 +79,23 @@ const ShowtimePage = () => {
   const handleDateChange = (date) => {
     setForm({
       ...form,
-      ngayChieuGioChieu: dayjs(date).format("DD/MM/YYYY HH:mm:ss"), // Định dạng dd/MM/yyyy hh:mm:ss
+      ngayChieuGioChieu: dayjs(date).format("DD/MM/YYYY HH:mm:ss"),
     });
   };
 
   const handleSubmit = async () => {
-    const { maRap, ngayChieuGioChieu, giaVe } = form;
+    const { maCumRap, ngayChieuGioChieu, giaVe } = form;
+    console.log("Thông tin form:", maCumRap, ngayChieuGioChieu, giaVe);
 
-    if (!maRap || !ngayChieuGioChieu || !giaVe) {
+    if (!maCumRap || !ngayChieuGioChieu || !giaVe) {
       message.error("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
     const payload = {
       maPhim: Number(idFilm),
-      maRap,
-      ngayChieuGioChieu, // Đã định dạng đúng trong handleDateChange
+      maRap: maCumRap,
+      ngayChieuGioChieu,
       giaVe: Number(giaVe),
     };
 
@@ -140,17 +141,20 @@ const ShowtimePage = () => {
 
         <Select
           placeholder="Chọn cụm rạp"
-          onChange={(value) => setForm({ ...form, maRap: value })}
+          onChange={(value) => setForm({ ...form, maCumRap: value })}
           className="w-full"
         >
-          {theaters.map((theater) => (
-            <Select.Option
-              key={`cumRap_${theater.maRap}`} // Đảm bảo key duy nhất
-              value={theater.maRap}
-            >
-              {theater.tenCumRap}
-            </Select.Option>
-          ))}
+          {theaters.map((theater) => {
+            console.log("Cụm rạp:", theater); // Log cụm rạp
+            return (
+              <Select.Option
+                key={`cumRap_${theater.maCumRap}`} // Đảm bảo key duy nhất
+                value={theater.maCumRap}
+              >
+                {theater.tenCumRap}
+              </Select.Option>
+            );
+          })}
         </Select>
 
         <DatePicker
