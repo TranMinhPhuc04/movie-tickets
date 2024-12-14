@@ -28,11 +28,9 @@ const userService = {
     });
   },
 
-  getUsers: ({ maNhom, tuKhoa }) =>
+  getUsers: ({ tuKhoa }) =>
     api.get(
-      `/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${maNhom}&tuKhoa=${
-        tuKhoa || ""
-      }`
+      `/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=GP01&tuKhoa=${tuKhoa || ""}`
     ),
 
   deleteUser: (taiKhoan) =>

@@ -5,34 +5,38 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setUser(JSON.parse(userData));
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setRole(parsedUser.maLoaiNguoiDung); // Xác định role từ user
     }
   }, []);
 
   const login = (userData) => {
-    // Kiểm tra quyền truy cập
-    if (userData.maLoaiNguoiDung !== "KhachHang") {
-      message.error("Bạn không có quyền truy cập!");
-      throw new Error("Unauthorized access");
+    if (!userData) {
+      message.error("Thông tin đăng nhập không hợp lệ!");
+      return;
     }
 
-    // Lưu vào localStorage nếu hợp lệ
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    message.success("Đăng nhập thành công");
+    setRole(userData.maLoaiNguoiDung); // Phân biệt role
+    message.success("Đăng nhập thành công!");
   };
 
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
+    setRole(null);
+    message.success("Đăng xuất thành công!");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

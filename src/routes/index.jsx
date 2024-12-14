@@ -74,7 +74,7 @@ const routes = [
         element: <AddFilmPage />,
       },
       {
-        path: `${ROUTES.EDIT_MOVIE}/:id`, // "/admin/flims/edit/:id"
+        path: `${ROUTES.EDIT_MOVIE}/:id`,
         element: <EditFilmPage />,
       },
       {

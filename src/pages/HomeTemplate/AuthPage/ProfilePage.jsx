@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 import { Input, Button, message, Tabs } from "antd";
 import userService from "../../../services/userService";
 
+const { TabPane } = Tabs;
+
 const ProfilePage = () => {
-  const [userInfo, setUserInfo] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useContext(AuthContext);
   const [form, setForm] = useState({
     taiKhoan: "",
     matKhau: "",
     email: "",
     soDt: "",
-    maNhom: "GP01",
     hoTen: "",
   });
 
@@ -21,7 +22,6 @@ const ProfilePage = () => {
   const fetchProfile = async () => {
     try {
       const res = await userService.getProfile();
-      setUserInfo(res.data.content || {});
       setForm(res.data.content || {});
     } catch (err) {
       console.error("Lỗi khi tải thông tin tài khoản:", err);
@@ -36,28 +36,19 @@ const ProfilePage = () => {
 
   const handleUpdate = async () => {
     try {
-      setIsLoading(true);
       await userService.updateProfile(form);
       message.success("Cập nhật thông tin thành công!");
-      fetchProfile();
     } catch (err) {
-      console.error("Lỗi khi cập nhật thông tin:", err.response || err);
-      const errorMsg =
-        err.response?.data?.content || "Cập nhật thất bại. Vui lòng thử lại!";
-      message.error(errorMsg);
-    } finally {
-      setIsLoading(false);
+      console.error("Cập nhật thông tin thất bại:", err.response || err);
+      message.error("Không thể cập nhật thông tin!");
     }
   };
 
-  // Chuyển đổi cấu trúc TabPane sang items
-  const tabItems = [
-    {
-      label: "Thông Tin Cá Nhân", // Tên Tab
-      key: "1", // Key của Tab
-      // Nội dung của Tab
-      children: (
-        <div className="grid grid-cols-1 gap-4">
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4">Thông Tin Cá Nhân</h2>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Thông Tin Cá Nhân" key="1">
           <Input
             placeholder="Tài khoản"
             name="taiKhoan"
@@ -91,44 +82,16 @@ const ProfilePage = () => {
           />
           <Button
             type="primary"
-            loading={isLoading}
             onClick={handleUpdate}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="bg-blue-600 text-white px-4 py-2 rounded mt-4"
           >
             Cập nhật
           </Button>
-        </div>
-      ),
-    },
-    {
-      label: "Lịch Sử Đặt Vé",
-      key: "2",
-      children: (
-        <div>
-          <h3 className="text-xl font-bold mb-4">Lịch Sử Đặt Vé</h3>
-          {userInfo.thongTinDatVe ? (
-            userInfo.thongTinDatVe.map((ticket, index) => (
-              <div key={index} className="mb-4 p-4 border rounded">
-                <h4 className="text-lg font-bold">{ticket.tenPhim}</h4>
-                <p>Ngày đặt: {ticket.ngayDat}</p>
-                <p>
-                  Rạp: {ticket.tenCumRap} - Ghế:{" "}
-                  {ticket.danhSachGhe.map((ghe) => ghe.tenGhe).join(", ")}
-                </p>
-              </div>
-            ))
-          ) : (
-            <p>Không có lịch sử đặt vé.</p>
-          )}
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Thông Tin Cá Nhân</h2>
-      <Tabs defaultActiveKey="1" items={tabItems} />
+        </TabPane>
+        <TabPane tab="Role" key="2">
+          <p>Role của bạn: {user?.maLoaiNguoiDung || "Không xác định"}</p>
+        </TabPane>
+      </Tabs>
     </div>
   );
 };

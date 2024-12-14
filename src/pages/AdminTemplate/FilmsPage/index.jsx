@@ -117,7 +117,7 @@ const FilmsPage = () => {
                 <div className="flex items-center space-x-4">
                   <button
                     onClick={() =>
-                      navigate(`${ROUTES.ADD_MOVIE}/${film.maPhim}`)
+                      navigate(`${ROUTES.EDIT_MOVIE}/${film.maPhim}`)
                     }
                     className="text-blue-500 hover:text-blue-700 transition-colors"
                   >
