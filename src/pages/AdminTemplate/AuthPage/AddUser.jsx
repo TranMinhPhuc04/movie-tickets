@@ -24,23 +24,13 @@ const AddUser = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Role trong AddUser:", role);
-    if (role !== "QuanTri") {
-      message.error("Bạn không có quyền truy cập!");
-      navigate("/admin/users");
-    } else {
-      fetchRoles(); // Lấy danh sách loại người dùng
-    }
+    fetchRoles();
   }, [role]);
 
   const fetchRoles = async () => {
     try {
       const res = await userService.getRoles();
-      if (res.data && res.data.content) {
-        setRoles(res.data.content);
-      } else {
-        throw new Error("Không nhận được danh sách loại người dùng!");
-      }
+      setRoles(res.data.content || []);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách loại người dùng:", err);
       message.error("Không thể lấy danh sách loại người dùng!");
