@@ -1,4 +1,3 @@
-import { message } from "antd";
 import React, { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
@@ -12,27 +11,25 @@ export const AuthProvider = ({ children }) => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      setRole(parsedUser.maLoaiNguoiDung); // Xác định role từ user
+      setRole(parsedUser.maLoaiNguoiDung); // Gán role từ dữ liệu người dùng
     }
   }, []);
 
   const login = (userData) => {
     if (!userData) {
-      message.error("Thông tin đăng nhập không hợp lệ!");
+      console.error("Thông tin đăng nhập không hợp lệ!");
       return;
     }
 
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    setRole(userData.maLoaiNguoiDung); // Phân biệt role
-    message.success("Đăng nhập thành công!");
+    setRole(userData.maLoaiNguoiDung); // Cập nhật role
   };
 
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
     setRole(null);
-    message.success("Đăng xuất thành công!");
   };
 
   return (

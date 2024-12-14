@@ -10,6 +10,7 @@ const API = {
   CREATE_SHOWTIME: "/QuanLyDatVe/TaoLichChieu",
   GET_USER_INFO: "/QuanLyNguoiDung/ThongTinTaiKhoan",
   UPDATE_USER_INFO: "/QuanLyNguoiDung/CapNhatThongTinTaiKhoan",
+  GET_USER_LIST: "/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=GP01",
 };
 
 export default API;

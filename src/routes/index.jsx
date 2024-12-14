@@ -14,6 +14,8 @@ import EditFilmPage from "../pages/AdminTemplate/EditFlimPage";
 import ShowtimePage from "../pages/AdminTemplate/ShowtimePage";
 import AdminLoginPage from "../pages/AdminTemplate/AuthPage/AdminLoginPage";
 import UserManagement from "../pages/AdminTemplate/AuthPage/UserManagement";
+import AddUser from "../pages/AdminTemplate/AuthPage/AddUser";
+import EditUser from "../pages/AdminTemplate/AuthPage/EditUser";
 import PrivateRoute from "../contexts/PrivateRoute";
 import { Route } from "react-router-dom";
 import ROUTES from "../constants/routes";
@@ -84,6 +86,14 @@ const routes = [
       {
         path: ROUTES.MANAGE_USER,
         element: <UserManagement />,
+      },
+      {
+        path: ROUTES.ADD_USER,
+        element: <AddUser />,
+      },
+      {
+        path: "/admin/edit-user/:taiKhoan",
+        element: <EditUser />,
       },
     ],
   },

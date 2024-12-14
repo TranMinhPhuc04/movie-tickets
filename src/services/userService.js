@@ -28,16 +28,28 @@ const userService = {
     });
   },
 
-  getUsers: ({ tuKhoa }) =>
+  getUsers: () => api.get(API.GET_USER_LIST),
+
+  // API tìm kiếm người dùng theo từ khóa
+  searchUsers: (keyword) =>
     api.get(
-      `/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=GP01&tuKhoa=${tuKhoa || ""}`
+      `/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=GP01&tuKhoa=${keyword}`
     ),
 
   deleteUser: (taiKhoan) =>
     api.delete(`/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${taiKhoan}`),
 
-  updateUser: (user) =>
-    api.put(`/QuanLyNguoiDung/CapNhatThongTinNguoiDung`, user),
+  getRoles: () => api.get("/QuanLyNguoiDung/LayDanhSachLoaiNguoiDung"), // API lấy loại người dùng
+
+  addUser: (userData) => api.post("/QuanLyNguoiDung/ThemNguoiDung", userData),
+
+  updateUser: (user) => {
+    return api.put(`/QuanLyNguoiDung/CapNhatThongTinNguoiDung`, user, {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFmaWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJtYWZpYUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiUXVhblRyaSIsIm1hZmlhQGdtYWlsLmNvbSIsIkdQMDEiXSwibmJmIjoxNzM0MTg5NDMwLCJleHAiOjE3MzQxOTMwMzB9.U38zsI35Ks42BUVHSzPVrXY8YwDzmWx-mzjmNlFEzQE`,
+      },
+    });
+  },
 };
 
 export default userService;
