@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import movieService from "../../../services/movieService";
 import { placeholderImage } from "../_components/Constant/defaultValue";
-import { Progress, Tabs } from "antd";
+import { Tabs } from "antd";
 import dayjs from "dayjs";
 import ROUTES from "../../../constants/routes";
 
@@ -56,29 +56,9 @@ export default function DetailMoviePage() {
                 <div className="text-white space-y-3 text-center md:text-left">
                   <p>{dayjs(detail.ngayKhoiChieu).format("DD-MM-YYYY")}</p>
                   <p className="font-bold text-xl">{detail.tenPhim}</p>
-                  {/* <p>{detail.heThongRapChieu[0].cumRapChieu[0].lichChieuPhim[0].thoiLuong ?? 120} minutes</p> */}
-                  {/* <p>{detail?.heThongRapChieu[0]?.cumRapChieu[0]?.lichChieuPhim[0]?.thoiLuong ?? 120} minutes</p> */}
                   <p>120 minutes</p>
-                  {/* <div className='w-full md:w-1/2'>
-                <button className='py-3 mt-3 w-1/2 md:w-full mx-auto text-white bg-red-500 rounded hover:bg-red-800 duration-300' onClick={() => {}}>
-                  Buy tickets
-                </button>
-              </div> */}
                 </div>
               </div>
-              {/* <Progress
-                size={150}
-                strokeWidth={10}
-                trailColor={"white"}
-                format={(percent) => (
-                  <span className="text-white font-medium block">
-                    {percent / 10} / 10
-                  </span>
-                )}
-                type="circle"
-                percent={detail.danhGia * 10}
-                className="mx-auto"
-              /> */}
             </div>
           </div>
           {detailRap?.heThongRapChieu?.length > 0 ? (
@@ -91,7 +71,7 @@ export default function DetailMoviePage() {
                     const id = String(index + 1);
                     return {
                       label: (
-                        <img className="w-16 h-16" src={item.logo} a lt="" />
+                        <img className="w-16 h-16" src={item.logo} alt="" />
                       ),
                       key: id,
                       children: item.cumRapChieu.map(

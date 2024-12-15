@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchListMovie } from "./duck/reducer"; // Dựa vào cấu trúc mới
-import Card from "./Card";
+import Card from "./card";
 
 const MovieList = () => {
   const dispatch = useDispatch();
