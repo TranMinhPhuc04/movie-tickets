@@ -53,10 +53,10 @@ const ShowtimePage = () => {
       const res = await theaterService.getTheatersBySystem(maHeThongRap);
       const validTheaters = (res.data.content || []).map((theater) => ({
         ...theater,
-        maCumRap: theater.maCumRap || `unknown_${Math.random()}`, // Thêm giá trị mặc định nếu thiếu
+        maCumRap: theater.maCumRap || `unknown_${Math.random()}`,
         tenCumRap: theater.tenCumRap || "Cụm rạp không xác định",
       }));
-      console.log("Danh sách cụm rạp hợp lệ:", validTheaters); // Log danh sách cụm rạp hợp lệ
+      console.log("Danh sách cụm rạp hợp lệ:", validTheaters);
       setTheaters(validTheaters);
     } catch (err) {
       console.error("Lỗi khi tải cụm rạp:", err);
