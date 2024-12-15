@@ -3,10 +3,11 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import userService from "../../../services/userService";
 import { message, Table, Button, Input } from "antd";
 import { useNavigate } from "react-router-dom";
+import ROUTES from "../../../constants/routes";
 
 const UserManagement = () => {
   const { user, role } = useContext(AuthContext);
-  const navigate = useNavigate(); // Sử dụng navigate để điều hướng
+  const navigate = useNavigate();
 
   if (user && role !== "QuanTri") {
     return (
@@ -17,7 +18,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
 
-  // Fetch danh sách người dùng
+  // Fetch toàn bộ danh sách người dùng
   const fetchUsers = async () => {
     try {
       const res = await userService.getUsers();
@@ -28,21 +29,45 @@ const UserManagement = () => {
     }
   };
 
+  // Tìm kiếm người dùng
+  const searchUsers = async (keyword) => {
+    try {
+      const res = await userService.searchUsers(keyword);
+      setUsers(res.data.content || []);
+    } catch (err) {
+      console.error("Lỗi khi tìm kiếm người dùng:", err);
+      message.error("Không thể tìm kiếm người dùng!");
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // Xử lý chỉnh sửa người dùng
+  const handleSearch = () => {
+    if (search.trim()) {
+      searchUsers(search.trim()); // Nếu có từ khóa, gọi API tìm kiếm
+    } else {
+      fetchUsers(); // Nếu không có từ khóa, tải toàn bộ danh sách
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch(); // Gọi hàm tìm kiếm khi nhấn Enter
+    }
+  };
+
   const handleEditUser = (user) => {
-    navigate(`/admin/edit-user/${user.taiKhoan}`, { state: { user } });
+    navigate(ROUTES.EDIT_USER.replace(":taiKhoan", user.taiKhoan), {
+      state: { user },
+    });
   };
 
-  // Xử lý thêm người dùng
   const handleAddUser = () => {
-    navigate(`/admin/add-user`);
+    navigate(ROUTES.ADD_USER);
   };
 
-  // Xử lý xóa người dùng
   const handleDeleteUser = async (taiKhoan) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
       try {
@@ -65,9 +90,10 @@ const UserManagement = () => {
             placeholder="Nhập vào tài khoản hoặc họ tên"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown} // Thêm sự kiện onKeyDown
             style={{ width: "300px" }}
           />
-          <Button type="primary" onClick={fetchUsers}>
+          <Button type="primary" onClick={handleSearch}>
             Tìm
           </Button>
           <Button

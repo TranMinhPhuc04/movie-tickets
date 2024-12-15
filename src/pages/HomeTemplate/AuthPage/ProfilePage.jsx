@@ -50,14 +50,12 @@ const ProfilePage = () => {
     }
   };
 
-  // Chuyển đổi cấu trúc TabPane sang items
   const tabItems = [
     {
-      label: "Thông Tin Cá Nhân", // Tên Tab
-      key: "1", // Key của Tab
-      // Nội dung của Tab
+      label: "Thông Tin Cá Nhân",
+      key: "1",
       children: (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             placeholder="Tài khoản"
             name="taiKhoan"
@@ -89,14 +87,16 @@ const ProfilePage = () => {
             value={form.hoTen}
             onChange={handleInputChange}
           />
-          <Button
-            type="primary"
-            loading={isLoading}
-            onClick={handleUpdate}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Cập nhật
-          </Button>
+          <div className="md:col-span-2">
+            <Button
+              type="primary"
+              loading={isLoading}
+              onClick={handleUpdate}
+              className="bg-blue-600 text-white px-4 py-2 rounded w-full md:w-auto"
+            >
+              Cập nhật
+            </Button>
+          </div>
         </div>
       ),
     },
@@ -108,17 +108,22 @@ const ProfilePage = () => {
           <h3 className="text-xl font-bold mb-4">Lịch Sử Đặt Vé</h3>
           {userInfo.thongTinDatVe ? (
             userInfo.thongTinDatVe.map((ticket, index) => (
-              <div key={index} className="mb-4 p-4 border rounded">
-                <h4 className="text-lg font-bold">{ticket.tenPhim}</h4>
-                <p>Ngày đặt: {ticket.ngayDat}</p>
-                <p>
+              <div
+                key={index}
+                className="mb-4 p-4 border rounded shadow-sm bg-gray-50"
+              >
+                <h4 className="text-lg font-bold text-blue-600">
+                  {ticket.tenPhim}
+                </h4>
+                <p className="text-gray-700">Ngày đặt: {ticket.ngayDat}</p>
+                <p className="text-gray-700">
                   Rạp: {ticket.tenCumRap} - Ghế:{" "}
                   {ticket.danhSachGhe.map((ghe) => ghe.tenGhe).join(", ")}
                 </p>
               </div>
             ))
           ) : (
-            <p>Không có lịch sử đặt vé.</p>
+            <p className="text-gray-500">Không có lịch sử đặt vé.</p>
           )}
         </div>
       ),
@@ -126,9 +131,13 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Thông Tin Cá Nhân</h2>
-      <Tabs defaultActiveKey="1" items={tabItems} />
+    <div className="mt-[70px] min-h-screen p-6 bg-gradient-to-r from-blue-100 to-blue-300">
+      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+          Thông Tin Cá Nhân
+        </h2>
+        <Tabs defaultActiveKey="1" items={tabItems} />
+      </div>
     </div>
   );
 };

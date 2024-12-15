@@ -5,9 +5,10 @@ const ListSeat = ({ listSeat, onSelectSeat, selectedSeats }) => {
   const groupedSeats = groupSeatsByRow(listSeat);
 
   return (
-    <div className="seating-grid">
-      {Object.entries(groupedSeats).map(([row, seats]) => (
-        <div key={row} className="seat-row">
+    <div className="seating-grid space-y-4">
+      {Object.entries(groupSeatsByRow(listSeat)).map(([row, seats]) => (
+        <div key={row} className="seat-row flex gap-2 justify-center">
+          <span className="text-white font-semibold mr-4">Hàng {row}</span>
           {seats.map((seat) => (
             <Seat
               key={seat.maGhe}
@@ -24,13 +25,23 @@ const ListSeat = ({ listSeat, onSelectSeat, selectedSeats }) => {
 
 const groupSeatsByRow = (listSeat) => {
   const groupedSeats = {};
+
   listSeat.forEach((seat) => {
-    const row = Math.ceil(seat.tenGhe / 10);
+    // Tính hàng hiện tại dựa trên 16 ghế mỗi hàng
+    const row = Math.ceil(seat.tenGhe / 16);
+
     if (!groupedSeats[row]) {
       groupedSeats[row] = [];
     }
+
     groupedSeats[row].push(seat);
   });
+
+  // Sắp xếp ghế trong từng hàng theo thứ tự tăng dần
+  Object.values(groupedSeats).forEach((rowSeats) => {
+    rowSeats.sort((a, b) => a.tenGhe - b.tenGhe);
+  });
+
   return groupedSeats;
 };
 

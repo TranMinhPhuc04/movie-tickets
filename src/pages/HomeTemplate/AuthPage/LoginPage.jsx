@@ -7,7 +7,7 @@ import ROUTES from "../../../constants/routes";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ taiKhoan: "", matKhau: "" });
-  const [error, setError] = useState(""); // Để hiển thị lỗi nếu đăng nhập thất bại
+  const [error, setError] = useState(""); // Hiển thị lỗi nếu đăng nhập thất bại
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -40,14 +40,14 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">
           Đăng nhập
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="taiKhoan" className="block text-gray-700">
+          <div className="mb-5">
+            <label htmlFor="taiKhoan" className="block text-gray-700 mb-2">
               Tài khoản
             </label>
             <input
@@ -56,13 +56,13 @@ const LoginPage = () => {
               name="taiKhoan"
               value={formData.taiKhoan}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
               placeholder="Nhập tài khoản"
               required
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="matKhau" className="block text-gray-700">
+            <label htmlFor="matKhau" className="block text-gray-700 mb-2">
               Mật khẩu
             </label>
             <input
@@ -71,7 +71,7 @@ const LoginPage = () => {
               name="matKhau"
               value={formData.matKhau}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
               placeholder="Nhập mật khẩu"
               required
             />
@@ -79,11 +79,20 @@ const LoginPage = () => {
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
             Đăng nhập
           </button>
         </form>
+        <p className="text-center text-gray-600 mt-6">
+          Bạn chưa có tài khoản?{" "}
+          <button
+            onClick={() => navigate("/register")}
+            className="text-blue-600 hover:underline"
+          >
+            Đăng ký ngay
+          </button>
+        </p>
       </div>
     </div>
   );

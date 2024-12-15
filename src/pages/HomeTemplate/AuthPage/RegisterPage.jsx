@@ -32,7 +32,7 @@ const RegisterPage = () => {
     try {
       await userService.register(payload);
       message.success("Đăng ký thành công!");
-      navigate("/dangnhap"); // Điều hướng sang trang đăng nhập
+      navigate("/login"); // Điều hướng sang trang đăng nhập
     } catch (err) {
       console.error("Đăng ký thất bại:", err.response || err);
       const errorMsg =
@@ -42,9 +42,11 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="p-8 bg-white shadow-md rounded w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Đăng Ký</h2>
+    <div className="mt-[70px] min-h-screen flex justify-center items-center bg-gradient-to-r from-blue-100 to-blue-300">
+      <div className="p-8 bg-white shadow-lg rounded-lg w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
+          Đăng Ký
+        </h2>
         <form>
           <div className="mb-4">
             <Input
@@ -53,6 +55,7 @@ const RegisterPage = () => {
               value={form.taiKhoan}
               onChange={handleInputChange}
               required
+              className="rounded-lg"
             />
           </div>
           <div className="mb-4">
@@ -62,6 +65,7 @@ const RegisterPage = () => {
               value={form.matKhau}
               onChange={handleInputChange}
               required
+              className="rounded-lg"
             />
           </div>
           <div className="mb-4">
@@ -71,6 +75,7 @@ const RegisterPage = () => {
               value={form.nhapLaiMatKhau}
               onChange={handleInputChange}
               required
+              className="rounded-lg"
             />
           </div>
           <div className="mb-4">
@@ -80,6 +85,7 @@ const RegisterPage = () => {
               value={form.hoTen}
               onChange={handleInputChange}
               required
+              className="rounded-lg"
             />
           </div>
           <div className="mb-4">
@@ -89,6 +95,7 @@ const RegisterPage = () => {
               value={form.email}
               onChange={handleInputChange}
               required
+              className="rounded-lg"
             />
           </div>
           <div className="mb-4">
@@ -98,14 +105,19 @@ const RegisterPage = () => {
               value={form.soDt}
               onChange={handleInputChange}
               required
+              className="rounded-lg"
             />
           </div>
-          <div className="flex justify-between items-center">
-            <Button type="primary" onClick={handleSubmit}>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+            >
               Đăng ký
             </Button>
             <Link to="/login">
-              <Button>Đăng nhập ➡</Button>
+              <Button className="w-full sm:w-auto">Đăng nhập ➡</Button>
             </Link>
           </div>
         </form>

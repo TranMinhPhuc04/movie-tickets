@@ -36,7 +36,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
@@ -44,16 +44,16 @@ const Header = () => {
             <img
               src="./images/logo.jpg"
               alt="Movie Tickets"
-              className="h-12 w-12 mr-2"
+              className="h-10 w-10 mr-2"
             />
-            <span className="text-xl font-bold text-blue-800">
+            <span className="text-lg font-bold text-blue-800">
               MOVIE TICKET
             </span>
           </a>
         </div>
 
-        {/* Menu chính */}
-        <nav className="hidden md:flex space-x-8 text-lg font-semibold">
+        {/* Desktop Menu */}
+        <nav className="hidden md:flex space-x-6 text-sm font-medium">
           <button
             onClick={() => navigate("/movies")}
             className="text-gray-800 hover:text-blue-800 transition"
@@ -80,7 +80,7 @@ const Header = () => {
           </button>
         </nav>
 
-        {/* Menu user */}
+        {/* User Menu */}
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
             <Dropdown
@@ -88,7 +88,7 @@ const Header = () => {
               trigger={["click"]}
               placement="bottomRight"
             >
-              <button className="text-gray-800">
+              <button className="text-gray-800 hover:text-blue-800 transition">
                 Xin chào,{" "}
                 <strong>{user?.hoTen || user?.email || "Người dùng"}</strong>
               </button>
@@ -111,7 +111,7 @@ const Header = () => {
           )}
         </div>
 
-        {/* Menu di động */}
+        {/* Mobile Menu Button */}
         <button
           className="md:hidden text-blue-800"
           onClick={toggleMobileMenu}
@@ -134,10 +134,10 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Menu di động mở rộng */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
-          <nav className="flex flex-col space-y-2 p-4 text-lg font-semibold">
+          <nav className="flex flex-col space-y-4 p-4 text-base font-medium">
             <button
               onClick={() => {
                 navigate("/movies");
@@ -174,7 +174,7 @@ const Header = () => {
             >
               App
             </button>
-            <div className="flex flex-col space-y-2 mt-4">
+            <div className="flex flex-col space-y-2 border-t border-gray-300 mt-4 pt-4">
               {user ? (
                 <>
                   <button

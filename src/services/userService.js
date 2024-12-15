@@ -43,10 +43,12 @@ const userService = {
 
   addUser: (userData) => api.post("/QuanLyNguoiDung/ThemNguoiDung", userData),
 
-  updateUser: (user) => {
-    return api.put(`/QuanLyNguoiDung/CapNhatThongTinNguoiDung`, user, {
+  updateUser: (userToUpdate) => {
+    const token = localStorage.getItem("accessToken");
+
+    return api.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", userToUpdate, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFmaWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJtYWZpYUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiUXVhblRyaSIsIm1hZmlhQGdtYWlsLmNvbSIsIkdQMDEiXSwibmJmIjoxNzM0MTg5NDMwLCJleHAiOjE3MzQxOTMwMzB9.U38zsI35Ks42BUVHSzPVrXY8YwDzmWx-mzjmNlFEzQE`,
+        Authorization: `Bearer ${token}`, // Gửi token để backend xác thực
       },
     });
   },
