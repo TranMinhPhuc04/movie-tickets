@@ -18,7 +18,6 @@ const Header = () => {
     navigate("/profile");
   };
 
-  // Menu items cho Dropdown
   const userMenuItems = [
     {
       label: "Quản lý thông tin cá nhân",
@@ -41,12 +40,16 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <img
-            src="./images/logo.jpg"
-            alt="Movie Tickets"
-            className="h-12 w-12 mr-2"
-          />
-          <span className="text-xl font-bold text-blue-800">MOVIE TICKET</span>
+          <a href="/" className="flex items-center space-x-2">
+            <img
+              src="./images/logo.jpg"
+              alt="Movie Tickets"
+              className="h-12 w-12 mr-2"
+            />
+            <span className="text-xl font-bold text-blue-800">
+              MOVIE TICKET
+            </span>
+          </a>
         </div>
 
         {/* Menu chính */}

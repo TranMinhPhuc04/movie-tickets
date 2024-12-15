@@ -1,12 +1,14 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../../../services/userService";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { message } from "antd";
+import ROUTES from "../../../constants/routes";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ taiKhoan: "", matKhau: "" });
   const [error, setError] = useState(""); // Để hiển thị lỗi nếu đăng nhập thất bại
-  const navigate = useNavigate(); // Khai báo useNavigate
+  const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -18,13 +20,19 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await userService.login(formData);
-      console.log("Login successful:", response.data);
+      const userData = response.data.content;
 
       // Gọi hàm login từ AuthContext
-      login(response.data.content);
+      login(userData);
 
-      // Chuyển hướng về trang chủ
-      navigate("/");
+      // Chuyển hướng dựa trên role
+      if (userData.maLoaiNguoiDung === "QuanTri") {
+        message.success("Đăng nhập admin thành công!");
+        navigate(ROUTES.MOVIE); // Điều hướng đến trang admin
+      } else {
+        message.success("Đăng nhập thành công!");
+        navigate("/"); // Điều hướng đến trang người dùng
+      }
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
       setError(error.response?.data?.message || "Đăng nhập thất bại!");
@@ -43,7 +51,7 @@ const LoginPage = () => {
               Tài khoản
             </label>
             <input
-              type="taiKhoan"
+              type="text"
               id="taiKhoan"
               name="taiKhoan"
               value={formData.taiKhoan}
@@ -54,7 +62,7 @@ const LoginPage = () => {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700">
+            <label htmlFor="matKhau" className="block text-gray-700">
               Mật khẩu
             </label>
             <input
@@ -68,6 +76,7 @@ const LoginPage = () => {
               required
             />
           </div>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
@@ -75,11 +84,6 @@ const LoginPage = () => {
             Đăng nhập
           </button>
         </form>
-        <div className="mt-4 text-center">
-          <a href="/register" className="text-blue-600 hover:underline text-sm">
-            Chưa có tài khoản? Đăng ký ngay
-          </a>
-        </div>
       </div>
     </div>
   );

@@ -2,15 +2,20 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import ROUTES from "../constants/routes";
 
-const PrivateRoute = () => {
-  const isAuthenticated = !!localStorage.getItem("USER_ADMIN");
+const PrivateRoute = ({ allowedRoles }) => {
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
 
-  if (!isAuthenticated) {
-    // Nếu chưa đăng nhập, điều hướng đến trang đăng nhập
-    return <Navigate to={ROUTES.ADMIN_LOGIN} replace />;
+  if (!user) {
+    // Nếu chưa đăng nhập, điều hướng về trang đăng nhập
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  // Nếu đã đăng nhập, render nội dung
+  if (!allowedRoles.includes(user.maLoaiNguoiDung)) {
+    // Nếu role không được phép, điều hướng đến trang chính
+    return <Navigate to="/" replace />;
+  }
+
   return <Outlet />;
 };
 

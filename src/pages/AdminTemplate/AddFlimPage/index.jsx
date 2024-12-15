@@ -57,7 +57,9 @@ const AddFilmPage = () => {
       const response = await movieService.addFilm(formData);
       message.success("Thêm phim thành công!");
       console.log("Response:", response);
-      navigate(ROUTES.MOVIE);
+
+      console.log("Navigating to:", ROUTES.MOVIE); // Log xem đường dẫn
+      navigate(ROUTES.MOVIE); // Chuyển hướng sau khi thêm thành công
     } catch (error) {
       console.error("Thêm phim thất bại:", error);
       message.error("Thêm phim thất bại. Vui lòng kiểm tra lại.");

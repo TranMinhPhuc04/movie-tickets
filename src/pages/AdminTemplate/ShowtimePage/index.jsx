@@ -4,6 +4,8 @@ import { message, Select, DatePicker, Input, Button } from "antd";
 import movieService from "../../../services/movieService";
 import theaterService from "../../../services/theaterService";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import ROUTES from "../../../constants/routes";
 
 const ShowtimePage = () => {
   const { idFilm } = useParams();
@@ -12,6 +14,8 @@ const ShowtimePage = () => {
   const [theaters, setTheaters] = useState([]);
   const [selectedTheaterSystem, setSelectedTheaterSystem] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     maPhim: null,
@@ -104,12 +108,9 @@ const ShowtimePage = () => {
     try {
       await movieService.createShowtime(payload);
       message.success("Tạo lịch chiếu thành công!");
+      navigate(ROUTES.MOVIE); // Chuyển hướng sau khi thêm thành công
     } catch (err) {
       console.error("Tạo lịch chiếu thất bại:", err.response || err);
-      const errorMsg =
-        err.response?.data?.message ||
-        "Không thể tạo lịch chiếu. Vui lòng kiểm tra lại!";
-      message.error(errorMsg);
     }
   };
 
