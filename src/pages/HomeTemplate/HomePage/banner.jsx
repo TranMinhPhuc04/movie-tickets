@@ -17,16 +17,16 @@ const Banner = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[800px] bg-gray-200 bg-cover">
-        <p className="text-xl text-gray-700">Đang tải banner...</p>
+      <div className="flex items-center justify-center h-[500px] sm:h-[600px] lg:h-[800px] bg-gray-200">
+        <p className="text-lg sm:text-xl text-gray-700">Đang tải banner...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-[800px] bg-gray-200">
-        <p className="text-xl text-red-500">Lỗi: {error}</p>
+      <div className="flex items-center justify-center h-[500px] sm:h-[600px] lg:h-[800px] bg-gray-200">
+        <p className="text-lg sm:text-xl text-red-500">Lỗi: {error}</p>
       </div>
     );
   }
@@ -40,23 +40,26 @@ const Banner = () => {
     autoplay: true,
     autoplaySpeed: 3000,
     arrows: false,
-    accessibility: true, // Bật hỗ trợ ARIA
-    focusOnSelect: false, // Ngăn focus trên slide không hiển thị
+    accessibility: true,
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full">
       <Slider {...settings}>
         {banners?.map((banner, index) => (
           <div key={index}>
-            <div className="relative w-full h-[800px]">
+            <div className="relative w-full h-[500px] sm:h-[600px] lg:h-[800px]">
+              {/* Hình ảnh banner */}
               <img
                 src={banner.hinhAnh}
                 alt={banner.tenPhim}
-                className="w-full h-[800px] object-cover"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
-                <h2 className="text-4xl font-bold">{banner.tenPhim}</h2>
+              {/* Lớp phủ nội dung */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white px-4 sm:px-8">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center">
+                  {banner.tenPhim}
+                </h2>
               </div>
             </div>
           </div>
